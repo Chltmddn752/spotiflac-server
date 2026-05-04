@@ -107,7 +107,6 @@ func downloadHandler(w http.ResponseWriter, r *http.Request) {
 	// iTunes 메타데이터를 ffmpeg으로 파일에 임베드
 	safeTitle := sanitizeFilename(req.Title)
 	safeArtist := sanitizeFilename(req.Artist)
-	safeAlbum := sanitizeFilename(req.Album)
 	outputFilename := fmt.Sprintf("%s - %s.m4a", safeTitle, safeArtist)
 	outputPath := filepath.Join(tmpDir, "tagged_"+outputFilename)
 
