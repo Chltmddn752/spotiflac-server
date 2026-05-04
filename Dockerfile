@@ -1,7 +1,7 @@
 # ── Stage 1: SpotiFLAC 빌드 ──────────────────────────────────────
-FROM golang:1.21-alpine AS spotiflac-builder
+FROM golang:1.25rc1-alpine AS spotiflac-builder
 
-RUN apk add --no-cache git gcc musl-dev nodejs npm
+RUN apk add --no-cache git gcc musl-dev
 
 WORKDIR /spotiflac
 RUN git clone https://github.com/Nizarberyan/SpotiFLAC.git .
@@ -10,7 +10,7 @@ RUN git clone https://github.com/Nizarberyan/SpotiFLAC.git .
 RUN go build -tags headless -o spotiflac .
 
 # ── Stage 2: HTTP 서버 빌드 ───────────────────────────────────────
-FROM golang:1.21-alpine AS server-builder
+FROM golang:1.25rc1-alpine AS server-builder
 
 WORKDIR /server
 COPY go.mod ./
@@ -20,7 +20,6 @@ RUN go build -o server .
 # ── Stage 3: 최종 이미지 ──────────────────────────────────────────
 FROM alpine:3.19
 
-# ffmpeg: SpotiFLAC이 오디오 변환에 사용
 RUN apk add --no-cache ffmpeg ca-certificates
 
 WORKDIR /app
