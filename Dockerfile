@@ -1,16 +1,18 @@
 # ── Stage 1: SpotiFLAC 빌드 ──────────────────────────────────────
-FROM golang:1.25rc1-alpine AS spotiflac-builder
+FROM golang:1.24-alpine AS spotiflac-builder
 
 RUN apk add --no-cache git gcc musl-dev
 
 WORKDIR /spotiflac
 RUN git clone https://github.com/Nizarberyan/SpotiFLAC.git .
 
-# headless 모드로 빌드 (GUI 없음)
+# go.mod의 go 버전 요구사항을 낮춰서 빌드 가능하게 패치
+RUN sed -i 's/^go 1\.25.*/go 1.24/' go.mod
+
 RUN go build -tags headless -o spotiflac .
 
 # ── Stage 2: HTTP 서버 빌드 ───────────────────────────────────────
-FROM golang:1.25rc1-alpine AS server-builder
+FROM golang:1.24-alpine AS server-builder
 
 WORKDIR /server
 COPY go.mod ./
